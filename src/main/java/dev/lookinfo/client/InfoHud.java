@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
@@ -44,11 +45,11 @@ import java.util.List;
  */
 public class InfoHud implements HudElement {
 
-    private static final int PAD = 5;
-    private static final int ROW_H = 11;
-    private static final int ROW_H_ICON = 18;
+    private static final int PAD = 4;
+    private static final int ROW_H = 10;
+    private static final int ROW_H_ICON = 17;
     private static final int ICON_SIZE = 16;
-    private static final int ICON_GAP = 3;
+    private static final int ICON_GAP = 2;
 
     private static final int COL_BG = 0xA0101218;
     private static final int COL_BORDER = 0x50FFFFFF;
@@ -137,13 +138,8 @@ public class InfoHud implements HudElement {
         }
         Identifier id = BuiltInRegistries.BLOCK.getKey(state.getBlock());
 
-        // 标题：当前语言的名称在前，英文名跟在后面当副标题（相同时省略）
-        Component localized = state.getBlock().getName();
-        out.add(Line.of(localized, COL_TITLE));
-        String english = englishName(id);
-        if (!english.equalsIgnoreCase(localized.getString())) {
-            out.add(Line.of(Component.literal(english), COL_SUB));
-        }
+        // 标题：中文名后面直接跟英文名（灰色括号），省一行高度
+        out.add(Line.of(nameWithEnglish(state.getBlock().getName(), englishName(id)), COL_TITLE));
 
         if (LookInfoConfig.showSource && id != null && !"minecraft".equals(id.getNamespace())) {
             out.add(Line.of(Component.literal(modName(id.getNamespace())), COL_KEY));
@@ -189,13 +185,8 @@ public class InfoHud implements HudElement {
             return;
         }
         Identifier id = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
-        Component localized = entity.getName();
-        out.add(Line.of(localized, COL_TITLE));
-
-        String english = englishName(id);
-        if (!english.equalsIgnoreCase(localized.getString())) {
-            out.add(Line.of(Component.literal(english), COL_SUB));
-        }
+        // 中文名（或玩家自定义名）后面跟英文名
+        out.add(Line.of(nameWithEnglish(entity.getName(), englishName(id)), COL_TITLE));
 
         if (id != null && !"minecraft".equals(id.getNamespace())) {
             out.add(Line.of(Component.literal(modName(id.getNamespace())), COL_KEY));
@@ -336,6 +327,20 @@ public class InfoHud implements HudElement {
     }
 
     // ---------------------------------------------------------------- 名字
+
+    /**
+     * 名字后面跟一个英文名：{@code 圆石 (Cobblestone)}。
+     *
+     * <p>英文环境和中文名相同时就省略括号部分，不然会出现 {@code Stone (Stone)}。</p>
+     */
+    private static Component nameWithEnglish(Component localized, String english) {
+        MutableComponent out = Component.empty().append(localized.copy());
+        if (!english.isEmpty() && !english.equalsIgnoreCase(localized.getString())) {
+            out.append(Component.literal(" (" + english + ")")
+                    .withStyle(Style.EMPTY.withColor(COL_SUB & 0xFFFFFF)));
+        }
+        return out;
+    }
 
     /** 注册名 → 可读英文名：{@code iron_ore} → {@code Iron Ore}。 */
     private static String englishName(Identifier id) {
