@@ -1,0 +1,10 @@
+{
+  "key.category.lookinfo": "LookInfo",
+  "key.lookinfo.toggle": "Toggle LookInfo",
+  "lookinfo.hardness": "Hardness: %s",
+  "lookinfo.unbreakable": "Unbreakable",
+  "lookinfo.need_tool": "Requires correct tool",
+  "lookinfo.container": "Slots: %s",
+  "lookinfo.health": "Health: %s / %s",
+  "lookinfo.armor": "Armor: %s"
+}

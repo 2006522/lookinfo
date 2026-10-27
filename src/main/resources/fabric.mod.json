@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "lookinfo",
+  "version": "1.0.0",
+  "name": "方块信息(LookInfo)",
+  "description": "Shows what you are looking at: block name, source mod, hardness, tool requirement, container size and mob health.",
+  "authors": [
+    "2006522"
+  ],
+  "contact": {
+    "sources": "https://github.com/2006522/lookinfo",
+    "issues": "https://github.com/2006522/lookinfo/issues"
+  },
+  "license": "MIT",
+  "icon": "assets/lookinfo/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.lookinfo.LookInfo"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "fabric-api": "*",
+    "minecraft": ">=26.4"
+  }
+}
