@@ -7,18 +7,19 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.CocoaBlock;
 import net.minecraft.world.level.block.NetherWartBlock;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
@@ -64,6 +65,8 @@ public class InfoHud implements HudElement {
     private static final int COL_WARN = 0xFFFF7070;
     /** 发光方块的亮度，暖黄色。 */
     private static final int COL_LIGHT = 0xFFFFD866;
+    /** 红石信号，偏红的珊瑚色。 */
+    private static final int COL_REDSTONE = 0xFFFF6B6B;
 
     /** 工具等级从低到高对应的物品，下标就是 {@link #tierOf} 的返回值。 */
     private static final Item[] PICKAXES = {
@@ -152,6 +155,15 @@ public class InfoHud implements HudElement {
         int light = state.getLightEmission();
         if (light > 0) {
             out.add(Line.of(Component.translatable("lookinfo.light", light), COL_LIGHT));
+        }
+
+        // 红石元件标一下当前信号强度（红石粉 0~15，红石块/火把/拉杆/按钮按实际输出）
+        int redstone = redstoneLevel(mc, pos, state);
+        if (redstone >= 0) {
+            out.add(new Line(
+                    Component.translatable("lookinfo.redstone", redstone),
+                    COL_REDSTONE,
+                    new ItemStack(Items.REDSTONE)));
         }
 
         if (LookInfoConfig.showTool) {
@@ -255,6 +267,37 @@ public class InfoHud implements HudElement {
             }
         }
         return null;
+    }
+
+    // ---------------------------------------------------------------- 红石
+
+    /**
+     * 方块当前的红石信号强度，非红石元件返回 -1（不占一行）。
+     *
+     * <p>两条路：</p>
+     * <ul>
+     *   <li>有 {@code power} 属性的（红石粉、红石比较器）直接读属性 —— 那才是它<b>输出</b>的强度；</li>
+     *   <li>其它信号源（红石块、红石火把、拉杆、按钮、压力板、中继器）取六个方向里最强的那个，
+     *       因为拉杆/按钮是朝特定方向输出的，只看 {@code UP} 会读到 0。</li>
+     * </ul>
+     *
+     * <p>{@code isSignalSource()} 在没通电时返回 false，所以没按的按钮、没通电的红石粉
+     * 不会白占一行（红石粉有 power 属性，仍会显示 0）。</p>
+     */
+    private static int redstoneLevel(Minecraft mc, BlockPos pos, BlockState state) {
+        for (Property<?> property : state.getProperties()) {
+            if (property instanceof IntegerProperty integer && "power".equals(property.getName())) {
+                return state.getValue(integer);
+            }
+        }
+        if (!state.isSignalSource()) {
+            return -1;
+        }
+        int best = 0;
+        for (Direction direction : Direction.values()) {
+            best = Math.max(best, state.getSignal(mc.level, pos, direction));
+        }
+        return best;
     }
 
     // ---------------------------------------------------------------- 工具

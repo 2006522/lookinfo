@@ -15,5 +15,6 @@
   "lookinfo.growing": "Still growing",
   "lookinfo.container": "Slots: %s",
   "lookinfo.health": "Health: %s / %s",
-  "lookinfo.armor": "Armor: %s"
+  "lookinfo.armor": "Armor: %s",
+  "lookinfo.redstone": "Redstone: %s"
 }
