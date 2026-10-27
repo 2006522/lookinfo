@@ -3,7 +3,10 @@
   "key.lookinfo.toggle": "开关方块信息",
   "lookinfo.hardness": "硬度: %s",
   "lookinfo.unbreakable": "不可破坏",
-  "lookinfo.need_tool": "需要正确工具",
+  "lookinfo.min_tool": "最低工具: %s",
+  "lookinfo.maturity": "成熟度: %s / %s",
+  "lookinfo.ripe": "已成熟",
+  "lookinfo.growing": "未成熟",
   "lookinfo.container": "容器: %s 格",
   "lookinfo.health": "生命: %s / %s",
   "lookinfo.armor": "护甲: %s"

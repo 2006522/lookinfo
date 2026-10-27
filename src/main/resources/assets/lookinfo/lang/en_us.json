@@ -3,7 +3,10 @@
   "key.lookinfo.toggle": "Toggle LookInfo",
   "lookinfo.hardness": "Hardness: %s",
   "lookinfo.unbreakable": "Unbreakable",
-  "lookinfo.need_tool": "Requires correct tool",
+  "lookinfo.min_tool": "Min. tool: %s",
+  "lookinfo.maturity": "Growth: %s / %s",
+  "lookinfo.ripe": "Ready to harvest",
+  "lookinfo.growing": "Still growing",
   "lookinfo.container": "Slots: %s",
   "lookinfo.health": "Health: %s / %s",
   "lookinfo.armor": "Armor: %s"

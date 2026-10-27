@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "lookinfo",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "name": "方块信息(LookInfo)",
   "description": "Shows what you are looking at: block name, source mod, hardness, tool requirement, container size and mob health.",
   "authors": [
