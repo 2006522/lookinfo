@@ -50,6 +50,8 @@ public class InfoHud implements HudElement {
     private static final int ROW_H_ICON = 17;
     private static final int ICON_SIZE = 16;
     private static final int ICON_GAP = 2;
+    /** 整体缩放：原版 GUI 缩放下字号偏大，85% 不挡视野。 */
+    private static final float SCALE = 0.85F;
 
     private static final int COL_BG = 0xA0101218;
     private static final int COL_BORDER = 0x50FFFFFF;
@@ -144,16 +146,6 @@ public class InfoHud implements HudElement {
         if (LookInfoConfig.showSource && id != null && !"minecraft".equals(id.getNamespace())) {
             out.add(Line.of(Component.literal(modName(id.getNamespace())), COL_KEY));
         }
-
-        if (LookInfoConfig.showHardness) {
-            float hardness = state.getDestroySpeed(mc.level, pos);
-            if (hardness < 0.0F) {
-                out.add(Line.of(Component.translatable("lookinfo.unbreakable"), COL_WARN));
-            } else {
-                out.add(Line.of(Component.translatable("lookinfo.hardness", trim(hardness)), COL_VALUE));
-            }
-        }
-
         if (LookInfoConfig.showTool) {
             Item tool = toolFor(state);
             if (tool != null) {
@@ -396,8 +388,16 @@ public class InfoHud implements HudElement {
             height += line.height();
         }
         int boxW = width + PAD * 2;
-        int x = (g.guiWidth() - boxW) / 2;
-        int y = LookInfoConfig.offsetY;
+
+        // 整体缩一点：原版 GUI 缩放下这套字号偏大，压到 85% 更不挡视野
+        var pose = g.pose();
+        pose.pushMatrix();
+        pose.scale(SCALE, SCALE);
+
+        // 缩放后可视宽度变宽了（guiWidth 是缩放前的），按缩放后的坐标系重新居中
+        int virtualWidth = Math.round(g.guiWidth() / SCALE);
+        int x = (virtualWidth - boxW) / 2;
+        int y = Math.round(LookInfoConfig.offsetY / SCALE);
 
         g.fill(x - 1, y - 1, x + boxW + 1, y + height + 1, COL_BORDER);
         g.fill(x, y, x + boxW, y + height, COL_BG);
@@ -415,5 +415,7 @@ public class InfoHud implements HudElement {
             g.text(mc.font, line.text(), textX, textY, line.color());
             rowY += rowH;
         }
+
+        pose.popMatrix();
     }
 }

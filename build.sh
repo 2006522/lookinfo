@@ -65,6 +65,17 @@ for jar in "$DEPS"/fapi/*.jar; do
   CP="$CP;$(tomix "$jar")"
 done
 
+# 画 HUD 时用 g.pose() 做整体缩放，Matrix3x2fStack 来自 joml（原版自带，
+# 但 javac 读签名要能解析）。从启动器的库目录借。
+JOML_ROOT="${JOML_ROOT:-/e/Axolotl.Launcher/meta/libraries/org/joml/joml}"
+if [ -d "$JOML_ROOT" ]; then
+  for jar in "$JOML_ROOT"/*/*.jar; do
+    [ -f "$jar" ] || continue
+    CP="$CP;$(tomix "$jar")"
+    break
+  done
+fi
+
 # FriendlyByteBuf 的方法签名上带 io.netty.buffer.*，读签名要能解析 netty，
 # 否则 javac 报"找不到 io.netty.buffer.ByteBuf 的类文件"。从启动器的库目录借。
 NETTY_ROOT="${NETTY_ROOT:-/e/Axolotl.Launcher/meta/libraries/io/netty}"
