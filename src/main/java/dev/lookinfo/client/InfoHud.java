@@ -62,6 +62,8 @@ public class InfoHud implements HudElement {
     private static final int COL_VALUE = 0xFFE6E6E6;
     private static final int COL_GOOD = 0xFF7CE38B;
     private static final int COL_WARN = 0xFFFF7070;
+    /** 发光方块的亮度，暖黄色。 */
+    private static final int COL_LIGHT = 0xFFFFD866;
 
     /** 工具等级从低到高对应的物品，下标就是 {@link #tierOf} 的返回值。 */
     private static final Item[] PICKAXES = {
@@ -146,6 +148,12 @@ public class InfoHud implements HudElement {
         if (LookInfoConfig.showSource && id != null && !"minecraft".equals(id.getNamespace())) {
             out.add(Line.of(Component.literal(modName(id.getNamespace())), COL_KEY));
         }
+        // 发光方块（火把、萤石、海晶灯、岩浆……）标一下亮度
+        int light = state.getLightEmission();
+        if (light > 0) {
+            out.add(Line.of(Component.translatable("lookinfo.light", light), COL_LIGHT));
+        }
+
         if (LookInfoConfig.showTool) {
             ToolHint hint = toolHint(state);
             if (hint != null) {

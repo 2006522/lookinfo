@@ -3,6 +3,7 @@
   "key.lookinfo.toggle": "Toggle LookInfo",
   "lookinfo.hardness": "Hardness: %s",
   "lookinfo.unbreakable": "Unbreakable",
+  "lookinfo.light": "Light level: %s",
   "lookinfo.min_tool": "Min. tool: %s",
   "lookinfo.any_tool": "Any %s",
   "lookinfo.tool.pickaxe": "pickaxe",

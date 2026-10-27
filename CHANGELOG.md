@@ -25,3 +25,8 @@ First release.
 - Panel sits at the top center of the screen; `I` toggles it.
 - Everything is client-side — no server round-trips, works on vanilla servers.
 - Config at `config/lookinfo.properties` to turn individual lines off.
+
+### Unreleased
+- **Light level** for glowing blocks (torches, lanterns, glowstone, sea lanterns, lava, …).
+- Every block that has a mining tag now gets a tool line: blocks requiring a tool show the lowest
+  tier, blocks that drop by hand show the tool class (`Any pickaxe`).

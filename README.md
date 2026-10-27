@@ -10,6 +10,7 @@ Aim at a block or a mob and a small panel appears at the top of the screen.
 - In-game name, with the English name (derived from the registry id, `iron_ore` → `Iron Ore`)
   underneath in grey when it differs
 - Source mod — only shown for modded blocks, so vanilla blocks stay clean
+- **Light level** for anything that glows — torches, lanterns, glowstone, sea lanterns, lava
 - **Which tool to use, with the item icon, plus a green `✓` / red `✗` for whether the tool
   you're holding will do.** Blocks that *require* a tool show the lowest tier that works
   (`[⛏] ✓ Min. tool: Iron Pickaxe` for diamond ore); blocks that drop by hand but are faster

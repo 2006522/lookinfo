@@ -3,6 +3,7 @@
   "key.lookinfo.toggle": "开关方块信息",
   "lookinfo.hardness": "硬度: %s",
   "lookinfo.unbreakable": "不可破坏",
+  "lookinfo.light": "光照等级: %s",
   "lookinfo.min_tool": "最低工具: %s",
   "lookinfo.any_tool": "任意%s",
   "lookinfo.tool.pickaxe": "镐",
