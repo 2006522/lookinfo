@@ -1,93 +1,126 @@
-# LookInfo
+# 方块信息 (LookInfo)
 
-Shows what you are looking at — a lightweight, client-side alternative for snapshots where
-[Jade](https://modrinth.com/mod/jade) hasn't caught up yet.
+[English](README.en.md) | **中文**
 
-Aim at a block or a mob and a small panel appears at the top of the screen.
+准星指到哪，就在屏幕顶部显示那块东西的信息 —— 轻量、纯客户端。给还没跟上的快照用的
+（比如现在的 Jade）。
 
-**Block**
+## 能看到什么
 
-- In-game name, with the English name (derived from the registry id, `iron_ore` → `Iron Ore`)
-  underneath in grey when it differs
-- Source mod — only shown for modded blocks, so vanilla blocks stay clean
-- **Light level** for anything that glows — torches, lanterns, glowstone, sea lanterns, lava
-- **Which tool to use, with the item icon, plus a green `✓` / red `✗` for whether the tool
-  you're holding will do.** Blocks that *require* a tool show the lowest tier that works
-  (`[⛏] ✓ Min. tool: Iron Pickaxe` for diamond ore); blocks that drop by hand but are faster
-  with a tool show the tool class instead (`[⛏] ✓ Any pickaxe`)
-- **Crop growth stage** — `Growth: 5 / 7` plus `Ready to harvest` / `Still growing`
-- Container slot count
+**指向方块**
 
-**Mob**
+```
+圆石 (Cobblestone)
+[⛏] ✓ 最低工具: 木镐
+```
 
-- In-game name + English name underneath
-- Source mod (modded entities only)
-- Health `current / max` — turns red at 30% or below
-- Armor, when it has any
+```
+火把 (Torch)
+光照等级: 14
+```
+
+```
+红石粉 (Redstone Dust)
+[🔴] 红石信号: 12
+```
+
+```
+小麦 (Wheat)
+成熟度: 7 / 7
+已成熟
+```
+
+具体项目：
+
+| 信息 | 说明 |
+| --- | --- |
+| 名字 | 中文名，后面括号跟英文名。英文名由注册名推导（`iron_ore` → `Iron Ore`），英文环境下两者相同会自动省略 |
+| 来源模组 | 只对模组方块显示，原版方块不占这一行 |
+| **光照等级** | 发光方块才有：火把 14、灯笼 15、萤石 15、岩浆 15…… |
+| **红石信号** | 红石元件才有。红石粉读 `power` 属性（0~15），其它信号源取六个方向最强的那个 |
+| **挖掘工具** | 带物品图标。行首绿勾 `✓` / 红叉 `✗` 表示**你手上那把**能不能挖 |
+| **作物成熟度** | `5 / 7` 加上「已成熟」/「未成熟」，成熟时是绿色 |
+| 容器格数 | 箱子、熔炉这类容器的槽位数量 |
+
+挖掘工具分两种说法，因为原版的要求本身就不一样：
+
+- **必须用对工具**（不拿对工具就不掉东西，比如石头、各种矿石）→ 显示最低够用的那一档，
+  钻石矿是 `最低工具: 铁镐`
+- **徒手也能挖**（泥土、沙土、木头、草）→ 显示工具种类，`任意锹`
+
+**指向生物**
+
+| 信息 | 说明 |
+| --- | --- |
+| 名字 | 名字 + 英文名 |
+| 来源模组 | 只对模组生物显示 |
+| 生命 | `当前 / 最大`，低于 30% 变红 |
+| 护甲 | 有护甲时才显示 |
 
 ---
 
-## Requirements
+## 环境要求
 
 | | |
 | --- | --- |
 | Minecraft | 26.4-snapshot-5 |
 | Fabric Loader | 0.19.5+ |
-| Fabric API | required |
+| Fabric API | 必须 |
 
-**Client-side only.** Nothing is sent to the server, so you can join vanilla servers with it.
+**纯客户端。** 不向服务端发任何数据，可以带着上原版服务器。
 
-## Install
+## 安装
 
-1. Install [Fabric Loader](https://fabricmc.net/use/) and [Fabric API](https://modrinth.com/mod/fabric-api);
-2. Drop `LookInfo-<version>.jar` into `mods/`;
-3. Launch.
+1. 装好 [Fabric Loader](https://fabricmc.net/use/) 和 [Fabric API](https://modrinth.com/mod/fabric-api)；
+2. 把 `LookInfo-<版本>.jar` 放进 `mods/`；
+3. 启动游戏。
 
-> Only one copy of the same mod id can exist. Delete the old jar before upgrading.
+> 同一个 mod id 只能有一份 jar，升级前先删旧的。
 
-## Usage
+## 用法
 
-Just look at something. Press `I` to toggle the panel on and off (rebindable in
-Options → Controls → Key Binds).
+指哪看哪。按 `I` 开关面板（可在「选项 → 控制 → 按键绑定」里改）。
 
-## Config
+面板固定在屏幕顶部居中，整体按 85% 缩放，不挡视野。
 
-`config/lookinfo.properties`, pick what to show:
+## 配置
+
+`config/lookinfo.properties`，按需关掉某几项：
 
 ```properties
-# Master switch (the I key writes this back)
+# 总开关（I 键会写回这里）
 enable=true
 
-# Distance from the top of the screen, in GUI pixels
+# 面板离屏幕顶边的距离（GUI 像素）
 offset_y=6
 
-# Show which mod the block/entity comes from
+# 显示方块/生物来自哪个模组
 show_source=true
 
-# Lowest tier tool needed to harvest the block (with icon)
+# 挖掘工具那一行（含图标和 ✓/✗）
 show_tool=true
 
-# Container slot count
+# 容器格数
 show_container=true
 
-# Mob health / armor
+# 生物血量 / 护甲
 show_health=true
 ```
 
-## Known limitations
+## 已知限制
 
-- **Container contents are not shown.** Minecraft only syncs a container's inventory to the
-  client while the screen is open, so outside of that the client genuinely doesn't know what's
-  inside. Only the slot count is available without a server round-trip.
-- Only the thing your crosshair is currently on — no "what does this drop", no NBT viewer.
+- **看不到容器里装了什么。** 原版只在打开界面时才把容器内容同步给客户端，不打开的时候客户端
+  是真的不知道里面有什么。不加服务端来回的话，只能拿到格数。
+- 只显示准星当前指着的那一个，不做掉落物预测、不读 NBT。
+- 火把、花、基岩这类既没有挖掘标签也没有光照/信号的方块，只显示名字和来源 ——
+  它们本来就没有更多可说的。
 
-## Why not just use Jade?
+## 为什么不用 Jade
 
-Jade 26.3 can't run on 26.4-snapshot-5 and can't be patched into working: `Mth.clamp` was removed
-from the game, `AbstractTexture` was replaced by `TextureHandle`, `CycleButton` was refactored, and
-`Renderable#extractRenderState` lost its mouse-coordinate parameters. Those are in Jade's rendering
-core, so it needs a real port rather than a patch. This mod covers the common case in the meantime.
+Jade 26.3 在 26.4-snapshot-5 上跑不起来，而且不是打补丁能解决的：游戏把 `Mth.clamp` 删了、
+`AbstractTexture` 换成了 `TextureHandle`、`CycleButton` 重构了、`Renderable#extractRenderState`
+少了鼠标坐标参数 —— 这些都在 Jade 的渲染核心里，等于要重写一遍。这个 mod 先顶上常用需求。
 
-## License
+## 许可证
 
 [MIT](LICENSE)
