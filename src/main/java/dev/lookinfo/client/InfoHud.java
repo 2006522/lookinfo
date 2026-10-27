@@ -147,15 +147,15 @@ public class InfoHud implements HudElement {
             out.add(Line.of(Component.literal(modName(id.getNamespace())), COL_KEY));
         }
         if (LookInfoConfig.showTool) {
-            Item tool = toolFor(state);
-            if (tool != null) {
+            ToolHint hint = toolHint(state);
+            if (hint != null) {
                 // 顺手标一下手上这套家伙能不能挖：绿勾 / 红叉
                 boolean canHarvest = mc.player != null && mc.player.hasCorrectToolForDrops(state);
                 Component text = Component.empty()
                         .append(Component.literal(canHarvest ? "✓ " : "✗ ")
                                 .withStyle(Style.EMPTY.withColor(canHarvest ? COL_GOOD : COL_WARN)))
-                        .append(Component.translatable("lookinfo.min_tool", toolName(tool)));
-                out.add(new Line(text, COL_VALUE, new ItemStack(tool)));
+                        .append(hint.label());
+                out.add(new Line(text, COL_VALUE, hint.icon()));
             }
         }
 
@@ -251,40 +251,64 @@ public class InfoHud implements HudElement {
 
     // ---------------------------------------------------------------- 工具
 
+    /** 工具提示：行首图标 + 那一行的文字。 */
+    private record ToolHint(ItemStack icon, Component label) {
+    }
+
+    /** 一类工具（镐/锹/斧/锄）以及它在语言文件里的短名字键。 */
+    private record ToolFamily(Item[] items, String key) {
+    }
+
+    private static final ToolFamily PICKAXE = new ToolFamily(PICKAXES, "lookinfo.tool.pickaxe");
+    private static final ToolFamily SHOVEL = new ToolFamily(SHOVELS, "lookinfo.tool.shovel");
+    private static final ToolFamily AXE = new ToolFamily(AXES, "lookinfo.tool.axe");
+    private static final ToolFamily HOE = new ToolFamily(HOES, "lookinfo.tool.hoe");
+
     /**
-     * 挖这个方块需要的最低档工具物品。
+     * 挖这个方块该用什么工具。
      *
-     * <p>返回 {@code null} 表示"不需要正确工具也能掉东西"（泥土、沙子这类），
-     * 这种情况不占一行 —— 玩家真正关心的是"没带对工具挖不下来"。</p>
+     * <p>两种说法，取决于原版怎么要求：</p>
+     * <ul>
+     *   <li>需要正确工具（不拿对工具就不掉东西，比如石头、矿石）→ 显示<b>最低够用的那一档</b>；</li>
+     *   <li>不需要（泥土、沙土、木头、草）→ 显示<b>这一类工具就够</b>，
+     *       因为徒手也能掉，只是慢。</li>
+     * </ul>
+     *
+     * <p>返回 {@code null} 表示这块方块跟挖掘工具没关系（火把、花、基岩、空气……），
+     * 那种情况不占一行。</p>
      */
-    private static Item toolFor(BlockState state) {
-        if (!state.requiresCorrectToolForDrops()) {
-            return null;
-        }
-        Item[] family = toolFamily(state);
+    private static ToolHint toolHint(BlockState state) {
+        ToolFamily family = familyOf(state);
         if (family == null) {
             return null;
+        }
+        if (!state.requiresCorrectToolForDrops()) {
+            return new ToolHint(new ItemStack(family.items()[0]),
+                    Component.translatable("lookinfo.any_tool",
+                            Component.translatable(family.key())));
         }
         int tier = tierOf(state);
         if (tier < 0) {
             return null;
         }
-        return family[Math.min(tier, family.length - 1)];
+        Item item = family.items()[Math.min(tier, family.items().length - 1)];
+        return new ToolHint(new ItemStack(item),
+                Component.translatable("lookinfo.min_tool", toolName(item)));
     }
 
     /** 方块用哪一类工具挖：镐 / 锹 / 斧 / 锄。 */
-    private static Item[] toolFamily(BlockState state) {
+    private static ToolFamily familyOf(BlockState state) {
         if (state.is(BlockTags.MINEABLE_WITH_PICKAXE)) {
-            return PICKAXES;
+            return PICKAXE;
         }
         if (state.is(BlockTags.MINEABLE_WITH_SHOVEL)) {
-            return SHOVELS;
+            return SHOVEL;
         }
         if (state.is(BlockTags.MINEABLE_WITH_AXE)) {
-            return AXES;
+            return AXE;
         }
         if (state.is(BlockTags.MINEABLE_WITH_HOE)) {
-            return HOES;
+            return HOE;
         }
         return null;
     }
