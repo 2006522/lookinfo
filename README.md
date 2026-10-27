@@ -10,7 +10,6 @@ Aim at a block or a mob and a small panel appears at the top of the screen.
 - In-game name, with the English name (derived from the registry id, `iron_ore` → `Iron Ore`)
   underneath in grey when it differs
 - Source mod — only shown for modded blocks, so vanilla blocks stay clean
-- Hardness (unbreakable blocks show up in red)
 - **Lowest tier tool that can actually harvest it, with the item icon, plus a green `✓` / red `✗`
   for whether the tool you're holding will do** — `[⛏] ✓ Iron Pickaxe` for diamond ore
 - **Crop growth stage** — `Growth: 5 / 7` plus `Ready to harvest` / `Still growing`
@@ -62,9 +61,6 @@ offset_y=6
 # Show which mod the block/entity comes from
 show_source=true
 
-# Block hardness
-show_hardness=true
-
 # Lowest tier tool needed to harvest the block (with icon)
 show_tool=true
 
@@ -81,8 +77,6 @@ show_health=true
   client while the screen is open, so outside of that the client genuinely doesn't know what's
   inside. Only the slot count is available without a server round-trip.
 - Only the thing your crosshair is currently on — no "what does this drop", no NBT viewer.
-- Hardness is the value the game uses for mining time; obsidian-scale blocks show as `50`,
-  bedrock-scale ones as `Unbreakable`.
 
 ## Why not just use Jade?
 

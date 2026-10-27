@@ -14,6 +14,7 @@
 - **The lowest-tool line now shows whether the tool in your hand works** — green `✓` / red `✗`,
   so you can see at a glance that a wooden pickaxe won't cut diamond ore.
 - `show_tool` now controls the lowest-tool line.
+- Hardness line removed, and the whole panel renders at 85% scale.
 
 ## v1.0.0 (2026-10-27)
 

@@ -24,9 +24,6 @@ public final class LookInfoConfig {
     /** 显示方块/实体所属的模组名。 */
     public static boolean showSource = true;
 
-    /** 显示方块硬度。 */
-    public static boolean showHardness = true;
-
     /** 显示"需要正确工具"提示。 */
     public static boolean showTool = true;
 
@@ -62,7 +59,6 @@ public final class LookInfoConfig {
         enable = bool(p, "enable", enable);
         offsetY = clampInt(p, "offset_y", offsetY, 0, 200);
         showSource = bool(p, "show_source", showSource);
-        showHardness = bool(p, "show_hardness", showHardness);
         showTool = bool(p, "show_tool", showTool);
         showContainer = bool(p, "show_container", showContainer);
         showHealth = bool(p, "show_health", showHealth);
@@ -77,7 +73,6 @@ public final class LookInfoConfig {
         out.setProperty("enable", Boolean.toString(enable));
         out.setProperty("offset_y", Integer.toString(offsetY));
         out.setProperty("show_source", Boolean.toString(showSource));
-        out.setProperty("show_hardness", Boolean.toString(showHardness));
         out.setProperty("show_tool", Boolean.toString(showTool));
         out.setProperty("show_container", Boolean.toString(showContainer));
         out.setProperty("show_health", Boolean.toString(showHealth));
