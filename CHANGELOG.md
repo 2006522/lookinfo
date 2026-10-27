@@ -9,9 +9,10 @@
   cocoa and sweet berries show `Growth: 5 / 7` plus `Ready to harvest` / `Still growing`
   (green when ripe). Sugar cane, cactus and bamboo are excluded on purpose — their `age` is
   segment count, not ripeness.
-- **English name first.** The title is now the name derived from the registry id
-  (`iron_ore` → `Iron Ore`), with the localized name underneath in grey when it differs.
-  Applies to blocks, mobs and crops.
+- **English name follows the localized one.** Title is the in-game name, the derived English name
+  sits underneath in grey when it differs (`石头` → `Stone`). Applies to blocks, mobs and crops.
+- **The lowest-tool line now shows whether the tool in your hand works** — green `✓` / red `✗`,
+  so you can see at a glance that a wooden pickaxe won't cut diamond ore.
 - `show_tool` now controls the lowest-tool line.
 
 ## v1.0.0 (2026-10-27)

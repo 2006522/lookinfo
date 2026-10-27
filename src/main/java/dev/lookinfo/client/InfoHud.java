@@ -9,6 +9,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.Container;
@@ -136,12 +137,12 @@ public class InfoHud implements HudElement {
         }
         Identifier id = BuiltInRegistries.BLOCK.getKey(state.getBlock());
 
-        // 标题：英文名（由注册名推导）。下面跟一行当前语言的名称，两者相同时省略
-        String english = englishName(id);
-        out.add(Line.of(Component.literal(english), COL_TITLE));
+        // 标题：当前语言的名称在前，英文名跟在后面当副标题（相同时省略）
         Component localized = state.getBlock().getName();
+        out.add(Line.of(localized, COL_TITLE));
+        String english = englishName(id);
         if (!english.equalsIgnoreCase(localized.getString())) {
-            out.add(Line.of(localized, COL_SUB));
+            out.add(Line.of(Component.literal(english), COL_SUB));
         }
 
         if (LookInfoConfig.showSource && id != null && !"minecraft".equals(id.getNamespace())) {
@@ -160,10 +161,13 @@ public class InfoHud implements HudElement {
         if (LookInfoConfig.showTool) {
             Item tool = toolFor(state);
             if (tool != null) {
-                out.add(new Line(
-                        Component.translatable("lookinfo.min_tool", toolName(tool)),
-                        COL_VALUE,
-                        new ItemStack(tool)));
+                // 顺手标一下手上这套家伙能不能挖：绿勾 / 红叉
+                boolean canHarvest = mc.player != null && mc.player.hasCorrectToolForDrops(state);
+                Component text = Component.empty()
+                        .append(Component.literal(canHarvest ? "✓ " : "✗ ")
+                                .withStyle(Style.EMPTY.withColor(canHarvest ? COL_GOOD : COL_WARN)))
+                        .append(Component.translatable("lookinfo.min_tool", toolName(tool)));
+                out.add(new Line(text, COL_VALUE, new ItemStack(tool)));
             }
         }
 
@@ -185,12 +189,12 @@ public class InfoHud implements HudElement {
             return;
         }
         Identifier id = BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType());
-        String english = englishName(id);
-        out.add(Line.of(Component.literal(english), COL_TITLE));
-
         Component localized = entity.getName();
+        out.add(Line.of(localized, COL_TITLE));
+
+        String english = englishName(id);
         if (!english.equalsIgnoreCase(localized.getString())) {
-            out.add(Line.of(localized, COL_SUB));
+            out.add(Line.of(Component.literal(english), COL_SUB));
         }
 
         if (id != null && !"minecraft".equals(id.getNamespace())) {

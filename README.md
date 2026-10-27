@@ -7,18 +7,18 @@ Aim at a block or a mob and a small panel appears at the top of the screen.
 
 **Block**
 
-- English name derived from the registry id (`iron_ore` → `Iron Ore`), with the localized name
+- In-game name, with the English name (derived from the registry id, `iron_ore` → `Iron Ore`)
   underneath in grey when it differs
 - Source mod — only shown for modded blocks, so vanilla blocks stay clean
 - Hardness (unbreakable blocks show up in red)
-- **Lowest tier tool that can actually harvest it, with the item icon** —
-  `[⛏] Iron Pickaxe` for diamond ore, `[⛏] Stone Pickaxe` for iron ore
+- **Lowest tier tool that can actually harvest it, with the item icon, plus a green `✓` / red `✗`
+  for whether the tool you're holding will do** — `[⛏] ✓ Iron Pickaxe` for diamond ore
 - **Crop growth stage** — `Growth: 5 / 7` plus `Ready to harvest` / `Still growing`
 - Container slot count
 
 **Mob**
 
-- English name + localized name
+- In-game name + English name underneath
 - Source mod (modded entities only)
 - Health `current / max` — turns red at 30% or below
 - Armor, when it has any
